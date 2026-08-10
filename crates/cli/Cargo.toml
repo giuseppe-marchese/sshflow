@@ -1,0 +1,18 @@
+[package]
+name = "sshflow-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "sshflow"
+path = "src/main.rs"
+
+[dependencies]
+sshflow-core.workspace = true
+sshflow-config.workspace = true
+sshflow-ssh.workspace = true
+sshflow-metrics.workspace = true
+clap.workspace = true
+serde_json.workspace = true
+anyhow.workspace = true
