@@ -1,0 +1,29 @@
+[package]
+name = "sshflow-daemon"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "sshflow-daemon"
+path = "src/main.rs"
+
+[dependencies]
+sshflow-core.workspace = true
+sshflow-config.workspace = true
+sshflow-ssh.workspace = true
+sshflow-metrics.workspace = true
+sshflow-plugins.workspace = true
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+anyhow.workspace = true
+dashmap.workspace = true
+parking_lot.workspace = true
+sysinfo.workspace = true
+rand.workspace = true
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
