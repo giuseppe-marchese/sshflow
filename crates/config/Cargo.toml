@@ -1,0 +1,13 @@
+[package]
+name = "sshflow-config"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+sshflow-core.workspace = true
+serde.workspace = true
+serde_yaml.workspace = true
+directories.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
