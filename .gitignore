@@ -1,0 +1,7 @@
+/target
+*.log
+.DS_Store
+
+# Local runtime state some contributors may generate while testing
+# against a real ~/.sshflow during development
+/dev-home/

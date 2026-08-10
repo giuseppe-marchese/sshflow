@@ -1,0 +1,15 @@
+# Example ~/.sshflow/config.yaml -- these are also the defaults, so an
+# empty or missing config file behaves identically to this one.
+# Copy relevant lines into your real config to override just those.
+
+autoMultiplex: true
+persistTime: 10m
+healthCheck: 30s
+reconnect: true
+maxConnections: 20
+metrics: true
+plugins: true
+
+# Off by default. There is currently no code path that sends data
+# anywhere even if this is set to true -- see SECURITY.md.
+telemetry: false

@@ -1,0 +1,12 @@
+# Copy to ~/.sshflow/plugins/log-events.yaml to try it out.
+#
+# Logs every SSHFlow event as one JSON line per event. `events: []`
+# means "subscribe to everything" -- list specific event names (see
+# README.md) to narrow it down.
+#
+# Verified working in this repo's own end-to-end test: connecting
+# through `sshflow ssh` produces a `ConnectionOpened` line here.
+name: log-events
+events: []
+command: /bin/sh
+args: ["-c", "cat >> /tmp/sshflow-events.log"]
