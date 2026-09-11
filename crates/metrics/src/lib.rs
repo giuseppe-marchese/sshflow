@@ -254,8 +254,8 @@ mod tests {
         let dir = std::env::temp_dir().join(format!(
             "sshflow-metrics-test-{}-{}-{}",
             std::process::id(),
-                                                    now_unix(),
-                                                    unique
+            now_unix(),
+            unique
         ));
         std::fs::create_dir_all(&dir).unwrap();
         dir

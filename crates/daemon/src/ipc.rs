@@ -7,6 +7,7 @@ use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 /// Newline-delimited JSON, one request/response pair per connection.
 /// Simple and sufficient for a local control-plane where the CLI opens
 /// a fresh connection per command.
+#[cfg(unix)]
 async fn handle_stream<S>(mut stream: S, state: Arc<DaemonState>)
 where
     S: tokio::io::AsyncRead + tokio::io::AsyncWrite + Unpin,
