@@ -248,10 +248,14 @@ mod tests {
     use super::*;
 
     fn temp_home() -> std::path::PathBuf {
+        use std::sync::atomic::{AtomicU64, Ordering};
+        static COUNTER: AtomicU64 = AtomicU64::new(0);
+        let unique = COUNTER.fetch_add(1, Ordering::SeqCst);
         let dir = std::env::temp_dir().join(format!(
-            "sshflow-metrics-test-{}-{}",
+            "sshflow-metrics-test-{}-{}-{}",
             std::process::id(),
-            now_unix()
+                                                    now_unix(),
+                                                    unique
         ));
         std::fs::create_dir_all(&dir).unwrap();
         dir
