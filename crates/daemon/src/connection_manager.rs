@@ -79,7 +79,14 @@ impl ConnectionManager {
 
     /// Registers a brand-new connection (fresh master or an
     /// externally-created one handed over by the CLI).
-    pub fn insert_new(&self, key: String, target: HostTarget, control_socket: PathBuf, pid: Option<u32>, latency_ms: Option<u64>) {
+    pub fn insert_new(
+        &self,
+        key: String,
+        target: HostTarget,
+        control_socket: PathBuf,
+        pid: Option<u32>,
+        latency_ms: Option<u64>,
+    ) {
         let now = now_unix();
         self.connections.insert(
             key,

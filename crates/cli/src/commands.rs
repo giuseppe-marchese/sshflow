@@ -31,7 +31,9 @@ pub fn ssh(target: &str, extra_args: Vec<String>) -> Result<()> {
             if reused {
                 eprintln!("sshflow: reusing connection to {target} ({latency_ms} ms)");
             } else {
-                eprintln!("sshflow: connected to {target} ({latency_ms} ms handshake, now multiplexed)");
+                eprintln!(
+                    "sshflow: connected to {target} ({latency_ms} ms handshake, now multiplexed)"
+                );
             }
             control_socket
         }
@@ -41,7 +43,9 @@ pub fn ssh(target: &str, extra_args: Vec<String>) -> Result<()> {
             sshflow_ssh::start_master_interactive(
                 &control_socket,
                 &host_target,
-                config.persist_time_duration().unwrap_or(std::time::Duration::from_secs(600)),
+                config
+                    .persist_time_duration()
+                    .unwrap_or(std::time::Duration::from_secs(600)),
             )?;
             let pid = None;
             let _ = ipc_client::send(&DaemonRequest::RegisterExternalMaster {
@@ -88,7 +92,10 @@ pub fn stats() -> Result<()> {
         DaemonResponse::Stats(s) => {
             println!("Connections today: {}", s.connections_today);
             println!("Reused: {}", s.reused_today);
-            println!("Time saved: {}", sshflow_metrics::format_duration_ms(s.time_saved_ms));
+            println!(
+                "Time saved: {}",
+                sshflow_metrics::format_duration_ms(s.time_saved_ms)
+            );
             println!("Average latency: {:.0} ms", s.average_latency_ms);
             if s.failures_today > 0 {
                 println!("Failures: {}", s.failures_today);
@@ -117,7 +124,10 @@ pub fn connections() -> Result<()> {
                 println!("No active managed connections.");
                 return Ok(());
             }
-            println!("{:<30} {:<8} {:<10} {:<10}", "HOST", "HEALTHY", "REUSED", "LAST USED");
+            println!(
+                "{:<30} {:<8} {:<10} {:<10}",
+                "HOST", "HEALTHY", "REUSED", "LAST USED"
+            );
             for c in list {
                 println!(
                     "{:<30} {:<8} {:<10} {:<10}",
@@ -181,7 +191,11 @@ pub fn config_path() -> Result<()> {
 pub fn config_edit() -> Result<()> {
     let path = sshflow_config::config_path()?;
     let editor = std::env::var("EDITOR").unwrap_or_else(|_| {
-        if cfg!(windows) { "notepad".to_string() } else { "vi".to_string() }
+        if cfg!(windows) {
+            "notepad".to_string()
+        } else {
+            "vi".to_string()
+        }
     });
     let status = std::process::Command::new(editor).arg(&path).status()?;
     if !status.success() {

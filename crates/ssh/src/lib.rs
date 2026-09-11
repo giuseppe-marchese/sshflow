@@ -95,7 +95,11 @@ fn ssh_candidates() -> Vec<PathBuf> {
 }
 
 pub fn ssh_program() -> String {
-    if cfg!(windows) { "ssh.exe".to_string() } else { "ssh".to_string() }
+    if cfg!(windows) {
+        "ssh.exe".to_string()
+    } else {
+        "ssh".to_string()
+    }
 }
 
 /// Is the master at `socket_path` alive and answering `-O check`?
@@ -173,14 +177,19 @@ pub fn start_master_noninteractive(
         .arg("-o")
         .arg("BatchMode=yes")
         .arg("-o")
-        .arg(format!("ConnectTimeout={}", connect_timeout.as_secs().max(1)))
+        .arg(format!(
+            "ConnectTimeout={}",
+            connect_timeout.as_secs().max(1)
+        ))
         .arg("-N")
         .arg("-f");
     if let Some(port) = target.port {
         cmd.arg("-p").arg(port.to_string());
     }
     cmd.arg(destination_string(target));
-    cmd.stdin(Stdio::null()).stdout(Stdio::piped()).stderr(Stdio::piped());
+    cmd.stdin(Stdio::null())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped());
 
     let output = cmd
         .output()
@@ -273,7 +282,11 @@ fn harden_socket_permissions(_socket_path: &Path) {}
 /// success (true PTY/signal passthrough, identical to running `ssh`
 /// directly). On Windows it spawns and waits, returning the exit code.
 #[cfg(unix)]
-pub fn exec_client(socket_path: &Path, target: &HostTarget, extra_args: &[String]) -> std::io::Error {
+pub fn exec_client(
+    socket_path: &Path,
+    target: &HostTarget,
+    extra_args: &[String],
+) -> std::io::Error {
     use std::os::unix::process::CommandExt;
     let mut cmd = Command::new(ssh_program());
     cmd.arg("-S").arg(socket_path);
@@ -304,10 +317,18 @@ mod tests {
 
     #[test]
     fn detects_interactive_auth_needed() {
-        assert!(needs_interactive_auth("Permission denied (publickey,password)."));
-        assert!(needs_interactive_auth("keyboard-interactive authentication required"));
+        assert!(needs_interactive_auth(
+            "Permission denied (publickey,password)."
+        ));
+        assert!(needs_interactive_auth(
+            "keyboard-interactive authentication required"
+        ));
         assert!(needs_interactive_auth("Host key verification failed."));
-        assert!(!needs_interactive_auth("ssh: connect to host 10.0.0.1 port 22: Connection timed out"));
-        assert!(!needs_interactive_auth("Could not resolve hostname foo: Name or service not known"));
+        assert!(!needs_interactive_auth(
+            "ssh: connect to host 10.0.0.1 port 22: Connection timed out"
+        ));
+        assert!(!needs_interactive_auth(
+            "Could not resolve hostname foo: Name or service not known"
+        ));
     }
 }

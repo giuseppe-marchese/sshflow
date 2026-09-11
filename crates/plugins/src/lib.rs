@@ -66,7 +66,9 @@ impl PluginManager {
     }
 
     pub fn empty() -> Self {
-        PluginManager { plugins: Vec::new() }
+        PluginManager {
+            plugins: Vec::new(),
+        }
     }
 
     pub fn len(&self) -> usize {

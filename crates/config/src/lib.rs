@@ -184,10 +184,7 @@ pub fn load() -> Result<Config, ConfigError> {
 pub fn save(cfg: &Config) -> Result<(), ConfigError> {
     let path = config_path()?;
     let yaml = serde_yaml::to_string(cfg).expect("Config always serializes");
-    std::fs::write(&path, yaml).map_err(|e| ConfigError::Io {
-        path,
-        source: e,
-    })?;
+    std::fs::write(&path, yaml).map_err(|e| ConfigError::Io { path, source: e })?;
     Ok(())
 }
 

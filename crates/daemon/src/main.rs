@@ -20,7 +20,10 @@ async fn main() -> anyhow::Result<()> {
     let home = sshflow_config::sshflow_home()?;
     sshflow_ssh::socket_dir(&home)?;
 
-    tracing::info!(version = env!("CARGO_PKG_VERSION"), "sshflow-daemon starting");
+    tracing::info!(
+        version = env!("CARGO_PKG_VERSION"),
+        "sshflow-daemon starting"
+    );
 
     write_pid_file(&home)?;
 

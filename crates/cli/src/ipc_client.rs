@@ -82,10 +82,15 @@ fn ensure_daemon_running() -> Result<()> {
     }
 
     let daemon_path = locate_daemon_binary()?;
-    tracing_eprintln(&format!("starting sshflow-daemon ({})...", daemon_path.display()));
+    tracing_eprintln(&format!(
+        "starting sshflow-daemon ({})...",
+        daemon_path.display()
+    ));
 
     let mut cmd = Command::new(&daemon_path);
-    cmd.stdin(Stdio::null()).stdout(Stdio::null()).stderr(Stdio::null());
+    cmd.stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null());
 
     #[cfg(unix)]
     {
@@ -109,7 +114,11 @@ fn ensure_daemon_running() -> Result<()> {
 }
 
 fn locate_daemon_binary() -> Result<PathBuf> {
-    let name = if cfg!(windows) { "sshflow-daemon.exe" } else { "sshflow-daemon" };
+    let name = if cfg!(windows) {
+        "sshflow-daemon.exe"
+    } else {
+        "sshflow-daemon"
+    };
 
     // Prefer a copy sitting next to this executable (typical install
     // layout: both binaries in the same bin/ directory).

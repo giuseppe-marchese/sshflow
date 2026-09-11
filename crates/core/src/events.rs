@@ -6,13 +6,33 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "type", content = "data")]
 pub enum Event {
-    ConnectionOpened { key: String, host: String },
-    ConnectionClosed { key: String, host: String },
-    ConnectionReused { key: String, host: String },
-    HostAdded { host: String },
-    HostRemoved { host: String },
-    AuthenticationFailed { host: String, reason: String },
-    Reconnect { key: String, host: String, attempt: u32 },
+    ConnectionOpened {
+        key: String,
+        host: String,
+    },
+    ConnectionClosed {
+        key: String,
+        host: String,
+    },
+    ConnectionReused {
+        key: String,
+        host: String,
+    },
+    HostAdded {
+        host: String,
+    },
+    HostRemoved {
+        host: String,
+    },
+    AuthenticationFailed {
+        host: String,
+        reason: String,
+    },
+    Reconnect {
+        key: String,
+        host: String,
+        attempt: u32,
+    },
 }
 
 impl Event {

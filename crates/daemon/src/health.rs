@@ -38,9 +38,10 @@ async fn check_all(state: &Arc<DaemonState>) {
         };
         let socket = conn.control_socket.clone();
         let target = conn.target.clone();
-        let alive = tokio::task::spawn_blocking(move || sshflow_ssh::is_master_alive(&socket, &target))
-            .await
-            .unwrap_or(false);
+        let alive =
+            tokio::task::spawn_blocking(move || sshflow_ssh::is_master_alive(&socket, &target))
+                .await
+                .unwrap_or(false);
 
         if alive {
             state.connections.mark_healthy(&key, true);

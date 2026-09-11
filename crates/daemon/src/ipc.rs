@@ -74,10 +74,9 @@ async fn dispatch(req: DaemonRequest, state: &Arc<DaemonState>) -> DaemonRespons
             if let Some(conn) = state.connections.remove(&key) {
                 let socket = conn.control_socket.clone();
                 let target = conn.target.clone();
-                let _ = tokio::task::spawn_blocking(move || {
-                    sshflow_ssh::stop_master(&socket, &target)
-                })
-                .await;
+                let _ =
+                    tokio::task::spawn_blocking(move || sshflow_ssh::stop_master(&socket, &target))
+                        .await;
                 state.plugins.dispatch(&Event::ConnectionClosed {
                     key,
                     host: conn.target.display(),
@@ -105,7 +104,10 @@ async fn dispatch(req: DaemonRequest, state: &Arc<DaemonState>) -> DaemonRespons
 /// is the Connection Manager's core lifecycle decision: reuse an
 /// existing, healthy connection; recreate a stale one; or establish a
 /// brand-new one, respecting `maxConnections` along the way.
-async fn ensure_connection(state: &Arc<DaemonState>, target: sshflow_core::HostTarget) -> DaemonResponse {
+async fn ensure_connection(
+    state: &Arc<DaemonState>,
+    target: sshflow_core::HostTarget,
+) -> DaemonResponse {
     let key = target.key();
 
     // Fast path: reuse an already-alive master.
@@ -144,7 +146,9 @@ async fn ensure_connection(state: &Arc<DaemonState>, target: sshflow_core::HostT
     let home = state.home.clone();
     let socket_path = match sshflow_ssh::control_socket_path(&home, &target) {
         Ok(p) => p,
-        Err(e) => return DaemonResponse::Error(format!("could not prepare control socket path: {e}")),
+        Err(e) => {
+            return DaemonResponse::Error(format!("could not prepare control socket path: {e}"))
+        }
     };
 
     let persist = state
@@ -261,7 +265,10 @@ pub async fn serve_windows(state: Arc<DaemonState>) -> anyhow::Result<()> {
 
     if let Some(existing) = read_windows_endpoint(&info_path) {
         if TcpStream::connect(("127.0.0.1", existing.0)).await.is_ok() {
-            anyhow::bail!("a SSHFlow daemon is already listening on 127.0.0.1:{}", existing.0);
+            anyhow::bail!(
+                "a SSHFlow daemon is already listening on 127.0.0.1:{}",
+                existing.0
+            );
         }
     }
 
@@ -269,7 +276,10 @@ pub async fn serve_windows(state: Arc<DaemonState>) -> anyhow::Result<()> {
     let port = listener.local_addr()?.port();
     let mut token_bytes = [0u8; 16];
     rand::thread_rng().fill_bytes(&mut token_bytes);
-    let token = token_bytes.iter().map(|b| format!("{b:02x}")).collect::<String>();
+    let token = token_bytes
+        .iter()
+        .map(|b| format!("{b:02x}"))
+        .collect::<String>();
     std::fs::write(&info_path, format!("{port}\n{token}\n"))?;
     tracing::info!(port, "IPC listening (127.0.0.1, token-authenticated)");
 

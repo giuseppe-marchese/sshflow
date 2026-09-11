@@ -53,7 +53,10 @@ impl HostTarget {
     /// `ssh`, e.g. `deploy@10.0.0.4:2222` or just `myserver`.
     pub fn parse(raw: &str) -> Result<Self> {
         if raw.is_empty() {
-            return Err(SshFlowError::InvalidTarget(raw.to_string(), "empty destination"));
+            return Err(SshFlowError::InvalidTarget(
+                raw.to_string(),
+                "empty destination",
+            ));
         }
         if raw.starts_with('-') {
             // Prevents option/argument injection into the ssh binary.
@@ -66,7 +69,10 @@ impl HostTarget {
         let (user, rest) = match raw.split_once('@') {
             Some((u, r)) => {
                 if u.is_empty() {
-                    return Err(SshFlowError::InvalidTarget(raw.to_string(), "empty user before '@'"));
+                    return Err(SshFlowError::InvalidTarget(
+                        raw.to_string(),
+                        "empty user before '@'",
+                    ));
                 }
                 (Some(u.to_string()), r)
             }
@@ -91,22 +97,29 @@ impl HostTarget {
                     (h.to_string(), port)
                 }
                 None => {
-                    return Err(SshFlowError::InvalidTarget(raw.to_string(), "unterminated '['"))
+                    return Err(SshFlowError::InvalidTarget(
+                        raw.to_string(),
+                        "unterminated '['",
+                    ))
                 }
             }
         } else {
             match rest.rsplit_once(':') {
-                Some((h, p)) if !h.is_empty() && p.chars().all(|c| c.is_ascii_digit()) => {
-                    (h.to_string(), Some(p.parse::<u16>().map_err(|_| {
+                Some((h, p)) if !h.is_empty() && p.chars().all(|c| c.is_ascii_digit()) => (
+                    h.to_string(),
+                    Some(p.parse::<u16>().map_err(|_| {
                         SshFlowError::InvalidTarget(raw.to_string(), "invalid port")
-                    })?))
-                }
+                    })?),
+                ),
                 _ => (rest.to_string(), None),
             }
         };
 
         if host.starts_with('-') {
-            return Err(SshFlowError::InvalidTarget(raw.to_string(), "host must not start with '-'"));
+            return Err(SshFlowError::InvalidTarget(
+                raw.to_string(),
+                "host must not start with '-'",
+            ));
         }
 
         Ok(HostTarget { user, host, port })
@@ -275,13 +288,17 @@ pub enum DaemonRequest {
     /// Ask the daemon to make sure a control-master connection exists
     /// (creating it if necessary) and return the socket path to use
     /// for the actual interactive `ssh` client invocation.
-    EnsureConnection { target: HostTarget },
+    EnsureConnection {
+        target: HostTarget,
+    },
     Status,
     Stats,
     Connections,
     Doctor,
     /// Ask the daemon to close a specific managed connection.
-    CloseConnection { key: String },
+    CloseConnection {
+        key: String,
+    },
     /// The CLI created a control-master connection itself (foreground,
     /// real TTY -- needed when auth requires an interactive prompt the
     /// headless daemon cannot satisfy) and is handing it over to the
@@ -307,7 +324,9 @@ pub enum DaemonResponse {
     /// key worked, batch mode forbids password/keyboard-interactive
     /// prompts). The CLI should fall back to creating the master
     /// itself in the foreground, where a real TTY is available.
-    NeedsInteractiveAuth { control_socket: PathBuf },
+    NeedsInteractiveAuth {
+        control_socket: PathBuf,
+    },
     Status(DaemonStatus),
     Stats(StatsSnapshot),
     Connections(Vec<ConnectionInfo>),
