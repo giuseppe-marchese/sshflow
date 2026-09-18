@@ -93,8 +93,14 @@ rather than something a user has to remember to disable.
 
 ## Reporting a vulnerability
 
-This is an early-stage open-source project without a dedicated security
-contact yet. Until one exists, please open a GitHub issue marked
-`security` with as much detail as you're comfortable including publicly,
-or avoid public disclosure of exploitable issues until a maintainer has
+Please do not open a public issue for a security vulnerability. Use
+GitHub's private vulnerability reporting instead: go to this
+repository's **Security** tab → **Report a vulnerability**. This opens
+a private draft security advisory visible only to the maintainer, so
+the issue can be discussed and fixed before anything is disclosed
+publicly.
+
+If for some reason you can't use that (e.g. you're reading this outside
+GitHub), you can still open a regular issue, but please leave exploit
+details out of it and avoid public disclosure until a maintainer has
 responded.
