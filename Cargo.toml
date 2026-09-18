@@ -15,7 +15,7 @@ version = "0.1.0"
 edition = "2021"
 license = "MIT"
 repository = "https://github.com/sshflow/sshflow"
-authors = ["SSHFlow Contributors"]
+authors = ["Giuseppe Marchese"]
 
 [workspace.dependencies]
 sshflow-core = { path = "crates/core" }
